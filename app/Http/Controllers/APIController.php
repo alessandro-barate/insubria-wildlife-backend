@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\sendMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
 
 class APIController extends Controller
 {
-    public function sendMail()
+    public function sendMail(Request $request)
     {
-        return response()->json('ciao');
+        $data = $request()->collect();
+
+        Mail::to($request->user())->send(new sendMail($data));
+
+
+        return response()->json($request->collect()->toJson());
     }
 }

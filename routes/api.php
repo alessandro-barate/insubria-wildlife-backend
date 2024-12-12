@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/sendMail', [APIController::class, 'sendMail']);
+Route::post('/sendMail', [APIController::class, 'sendMail']);
