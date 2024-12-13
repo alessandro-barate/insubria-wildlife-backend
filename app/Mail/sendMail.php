@@ -39,7 +39,7 @@ class sendMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.orders.shipped',
+            view: 'mail.sendmail',
             with: [
                 'NomeMittente' => $this->data->name,
                 'CognomeMittente' => $this->data->surname,
