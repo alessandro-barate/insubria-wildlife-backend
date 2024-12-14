@@ -4,11 +4,12 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class sendMail extends Mailable
 {
@@ -21,6 +22,9 @@ class sendMail extends Mailable
     public function __construct(Collection $data)
     {
         $this->data = $data;
+        Log::info($this->data);
+
+        Log::info(env("MAIL_DEFAULT_TO_ADDRESS"));
     }
 
     /**
@@ -41,10 +45,10 @@ class sendMail extends Mailable
         return new Content(
             view: 'mail.sendmail',
             with: [
-                'NomeMittente' => $this->data->name,
-                'CognomeMittente' => $this->data->surname,
-                'EmailMittente' => $this->data->email,
-                'TestoMessaggioMittente' => $this->data->message,
+                'NomeMittente' => $this->data->get("name"),
+                'CognomeMittente' => $this->data->get("surname"),
+                'EmailMittente' => $this->data->get("email"),
+                'TestoMessaggioMittente' => $this->data->get("message"),
             ],
         );
     }
