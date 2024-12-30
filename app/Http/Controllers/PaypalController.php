@@ -30,14 +30,30 @@ class PaypalController extends Controller
                 ]
             ]
         ]);
+        // dd($response);
+
+        if(isset($response['id']) && $response['id']!=null) {
+            foreach($response['links'] as $link) {
+                if($link['rel'] === 'approve') {
+                    return redirect()->away($link['href']);
+                }
+            }
+        } else {
+            return redirect()->route('cancel');
+        }
+    }
+
+    public function success(Request $request)
+    {
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $paypalToken = $provider->getAccessToken();
+        $response = $provider->capturePaymentOrder($request->token);
         dd($response);
-    }
+    }   
 
-    public function success(){
-
-    }
-
-    public function cancel(){
+    public function cancel()
+    {
 
     }
 }
