@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('payment_id');
             $table->string('payer_name');
             $table->string('payer_surname');
-            $table->string('payer_email');
-            $table->string('payer_address');
+            $table->string('payer_email')->unique();
+            $table->json('payer_address')->change();
             $table->string('amount');
             $table->string('currency');
             $table->string('payment_method');
