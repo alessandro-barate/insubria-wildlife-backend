@@ -18,7 +18,7 @@ class sendMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(Collection $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }
@@ -41,10 +41,10 @@ class sendMail extends Mailable
         return new Content(
             view: 'mail.sendmail',
             with: [
-                'NomeMittente' => $this->data->name,
-                'CognomeMittente' => $this->data->surname,
-                'EmailMittente' => $this->data->email,
-                'TestoMessaggioMittente' => $this->data->message,
+                'NomeMittente' => $this->data['name'],
+                'CognomeMittente' => $this->data['surname'],
+                'EmailMittente' => $this->data['mail'],
+                'TestoMessaggioMittente' => $this->data['message'],
             ],
         );
     }

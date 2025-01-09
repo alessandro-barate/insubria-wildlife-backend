@@ -13,15 +13,33 @@ class APIController extends Controller
     public function sendMail(Request $request)
     {
         try {
-            $data = $request()->collect();
-            Mail::to($request->user())->send(new sendMail($data));
+            $data = [
+                'name' => $request->input('name'),
+                'surname' => $request->input('surname'),
+                'mail' => $request->input('mail'),
+                'message' => $request->input('message')
+            ];
 
-            return response()->json($request->collect()->toJson());
+            // For debug
+            Log::info('Dati ricevuti:', $data);
+
+            Mail::to($request->input('mail'))->send(new sendMail($data));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email inviata con successo'
+            ]);
+
         } catch (Exception $e) {
 
-            Log::error(printf("Errore: email non inviata. Messaggio di errore: %s - traccia: %s", [$e->getMessage(), $e->getTraceAsString()]));
+            Log::error("Errore: email non inviata. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            'data' => $data ?? null
+        ]);
 
-            return response()->json("Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social");
+            return response()->json([
+                "status" => "error",
+                "message" => "Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social"], 500);
         }
     }
 }
