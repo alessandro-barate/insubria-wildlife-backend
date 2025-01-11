@@ -23,7 +23,7 @@ class APIController extends Controller
             // For debug
             Log::info('Dati ricevuti:', $data);
 
-            Mail::to($request->input('mail'))->send(new sendMail($data));
+            Mail::to(env('MAIL_USERNAME'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
 
             return response()->json([
                 'status' => 'success',
@@ -34,7 +34,7 @@ class APIController extends Controller
 
             Log::error("Errore: email non inviata. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
-            'data' => $data ?? null
+                'data' => $data ?? null
         ]);
 
             return response()->json([

@@ -34,7 +34,7 @@ E' stata mandata da {{ $NomeMittente }} {{ $CognomeMittente }} {{ $EmailMittente
     </style>
 </head>
 <body>
-    <h1>Nuova comunicazione dal sito</h1>
+    <h1>Nuova comunicazione dal form del sito</h1>
     
     <div class="sender-info">
         <p><span class="field-label">Nome:</span> {{ $NomeMittente }}</p>
