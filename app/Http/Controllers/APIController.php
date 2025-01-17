@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class APIController extends Controller
 {
@@ -20,8 +21,17 @@ class APIController extends Controller
                 'message' => $request->input('message')
             ];
 
-            // For debug
-            Log::info('Dati ricevuti:', $data);
+            $validated = Validator::make($request->all(), [
+                'name' => 'required|max:30',
+                'surname' => 'required|max:30',
+                'mail' => 'required|email:rfc',
+                'body' => 'required|max:500',
+            ]);
+
+            if ($validated->fails()) {
+                // throw new Exception('Controllare ')
+                Log::error($request->all());
+            };
 
             Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
 
@@ -39,7 +49,7 @@ class APIController extends Controller
             return response()->json([
                 "status" => "error",
                 "message" => "Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social"
-            ], 500);
+            ], 422);
         }
     }
 }
