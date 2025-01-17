@@ -13,15 +13,33 @@ class APIController extends Controller
     public function sendMail(Request $request)
     {
         try {
-            $data = $request->collect();
-            Mail::to(env("MAIL_DEFAULT_TO_ADDRESS"))->send(new sendMail($data));
+            $data = [
+                'name' => $request->input('name'),
+                'surname' => $request->input('surname'),
+                'mail' => $request->input('mail'),
+                'message' => $request->input('message')
+            ];
 
-            return response()->json("Grazie di averci contattato, abbiamo ricevuto il tuo messaggio. Ti risponderemo il prima possibile.");
+            // For debug
+            Log::info('Dati ricevuti:', $data);
+
+            Mail::to(env('MAIL_USERNAME'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email inviata con successo'
+            ]);
         } catch (Exception $e) {
 
-            Log::error("Errore: email non inviata. Messaggio di errore: {s} - traccia: {e}", ['s' => $e->getMessage(), 'e' => $e->getTraceAsString()]);
+            Log::error("Errore: email non inviata. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'data' => $data ?? null
+            ]);
 
-            return response()->json("Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social.");
+            return response()->json([
+                "status" => "error",
+                "message" => "Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social"
+            ], 500);
         }
     }
 }

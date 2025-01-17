@@ -44,6 +44,12 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+
+            # Delete in production
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true,
+            'auth_mode' => null,
         ],
 
         'ses' => [
@@ -108,8 +114,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'insubria.wildlife@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Insubria WildLife'),
     ],
 
     /*

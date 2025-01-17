@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Collection;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -19,7 +18,7 @@ class sendMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(Collection $data)
+    public function __construct(array $data)
     {
         $this->data = $data;
         Log::info($this->data);
@@ -45,10 +44,10 @@ class sendMail extends Mailable
         return new Content(
             view: 'mail.sendmail',
             with: [
-                'NomeMittente' => $this->data->get("name"),
-                'CognomeMittente' => $this->data->get("surname"),
-                'EmailMittente' => $this->data->get("email"),
-                'TestoMessaggioMittente' => $this->data->get("message"),
+                'NomeMittente' => $this->data['name'],
+                'CognomeMittente' => $this->data['surname'],
+                'EmailMittente' => $this->data['mail'],
+                'TestoMessaggioMittente' => $this->data['message'],
             ],
         );
     }
