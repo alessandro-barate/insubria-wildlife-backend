@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\ContactFormException;
 use App\Mail\sendMail;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,12 +26,13 @@ class APIController extends Controller
                 'name' => 'required|max:30',
                 'surname' => 'required|max:30',
                 'mail' => 'required|email:rfc',
-                'body' => 'required|max:500',
+                'message' => 'required|min:10|max:500',
             ]);
 
             if ($validated->fails()) {
-                // throw new Exception('Controllare ')
                 Log::error($request->all());
+
+                throw new ContactFormException($validated->errors());
             };
 
             Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
@@ -39,6 +41,11 @@ class APIController extends Controller
                 'status' => 'success',
                 'message' => 'Email inviata con successo'
             ]);
+        } catch (ContactFormException $e) {
+            return response()->json([
+                "status" => "error",
+                "message" => $e->getMessage()
+            ], 200);
         } catch (Exception $e) {
 
             Log::error("Errore: email non inviata. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
