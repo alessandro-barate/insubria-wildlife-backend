@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Exceptions\ContactFormException;
 use App\Mail\sendMail;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class APIController extends Controller
 {
@@ -20,8 +22,18 @@ class APIController extends Controller
                 'message' => $request->input('message')
             ];
 
-            // For debug
-            Log::info('Dati ricevuti:', $data);
+            $validated = Validator::make($request->all(), [
+                'name' => 'required|max:30',
+                'surname' => 'required|max:30',
+                'mail' => 'required|email:rfc',
+                'message' => 'required|min:10|max:500',
+            ]);
+
+            if ($validated->fails()) {
+                Log::error($request->all());
+
+                throw new ContactFormException($validated->errors());
+            };
 
             Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
 
@@ -29,6 +41,11 @@ class APIController extends Controller
                 'status' => 'success',
                 'message' => 'Email inviata con successo'
             ]);
+        } catch (ContactFormException $e) {
+            return response()->json([
+                "status" => "error",
+                "message" => $e->getMessage()
+            ], 200);
         } catch (Exception $e) {
 
             Log::error("Errore: email non inviata. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
@@ -39,7 +56,7 @@ class APIController extends Controller
             return response()->json([
                 "status" => "error",
                 "message" => "Si è verificato un errore. Messaggio non inviato. Se il problema persiste contattateci tramite i nostri canali social"
-            ], 500);
+            ], 422);
         }
     }
 }
