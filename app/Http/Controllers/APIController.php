@@ -23,7 +23,7 @@ class APIController extends Controller
             // For debug
             Log::info('Dati ricevuti:', $data);
 
-            Mail::to(env('MAIL_USERNAME'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
+            Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
 
             return response()->json([
                 'status' => 'success',
