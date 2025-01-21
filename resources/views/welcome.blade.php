@@ -13,10 +13,6 @@
     </head>
 
     <body>
-        <form action="{{ route('paypal') }}" method="post">
-            @csrf
-            <input type="text" name="amount">
-            <button type="submit">Pay with Paypal</button>
-        </form>
+        
     </body>
 </html>

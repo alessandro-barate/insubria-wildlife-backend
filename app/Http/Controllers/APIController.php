@@ -59,4 +59,14 @@ class APIController extends Controller
             ], 422);
         }
     }
+
+    public function getToken(
+        Request $request
+    ) {
+
+        return response()->json([
+            'status' => 'success',
+            'token' => 'ciao'
+        ]);
+    }
 }
