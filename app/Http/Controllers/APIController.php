@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Exceptions\ContactFormException;
 use App\Mail\sendMail;
 use Exception;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -22,27 +25,27 @@ class APIController extends Controller
                 'surname' => $request->input('surname'),
                 'mail' => $request->input('mail'),
                 'message' => $request->input('message'),
-                'token' => $request->header('X-CSRF-TOKEN')
+                'token' => $request->header('X-CSRF-TOKEN'),
+                'myuuid' => $request->input('myuuid'),
+                // I don't collect the timestamp from the input (client) because I use the server timestamp
             ];
 
-            // Token validation
-            if ($data['token'] !== 'ciao') {
-                throw new ContactFormException('Dati non validi');
-            }
-
-            $validated = Validator::make($request->all(), [
+            $validated = Validator::make($request->all() + ['token' => $request->header('X-CSRF-TOKEN')], [
                 'name' => 'required|max:30',
                 'surname' => 'required|max:30',
                 'mail' => 'required|email:rfc',
                 'message' => 'required|min:10|max:500',
+                'token' => 'required|min:312|max:312',
+                'myuuid' => 'required|uuid'
             ]);
 
-            // Logging errors
+            // Validation check
             if ($validated->fails()) {
-                Log::error($request->all());
 
                 throw new ContactFormException($validated->errors());
             };
+
+            $decryptedToken = Crypt::decryptString($request->header('X-CSRF-TOKEN'));
 
             // Mail address to
             Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
@@ -53,6 +56,10 @@ class APIController extends Controller
             ]);
 
         // Catching contact form errors
+        } catch (DecryptException $e) {
+            
+        
+
         } catch (ContactFormException $e) {
 
             return response()->json([
@@ -91,9 +98,16 @@ class APIController extends Controller
             // User agent creation
             $userAgent = $request->server('HTTP_USER_AGENT');
 
+            // Catching timestamp
+            $date = Date::now('Europe/Rome')->format('U');
+
+            $encryptedToken = Crypt::encrypt($request->input('myuuid') . '§' . 
+                $userAgent . '§' . $date
+            ); 
+
             return response()->json([
                 'status' => 'success',
-                'token' => 'ciao'
+                'token' => $encryptedToken,
             ]);
         
         // Catching token errors
