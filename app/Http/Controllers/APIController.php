@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Exceptions\ContactFormException;
+use App\Http\Controllers\Exceptions\TokenValidityException;
 use App\Mail\sendMail;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
@@ -27,6 +29,7 @@ class APIController extends Controller
                 'message' => $request->input('message'),
                 'token' => $request->header('X-CSRF-TOKEN'),
                 'myuuid' => $request->input('myuuid'),
+                'user-agent' => $request->server('HTTP_USER_AGENT')
                 // I don't collect the timestamp from the input (client) because I use the server timestamp
             ];
 
@@ -35,9 +38,11 @@ class APIController extends Controller
                 'surname' => 'required|max:30',
                 'mail' => 'required|email:rfc',
                 'message' => 'required|min:10|max:500',
-                'token' => 'required|min:312|max:312',
+                'token' => 'required|string',
                 'myuuid' => 'required|uuid'
             ]);
+
+            
 
             // Validation check
             if ($validated->fails()) {
@@ -46,6 +51,29 @@ class APIController extends Controller
             };
 
             $decryptedToken = Crypt::decryptString($request->header('X-CSRF-TOKEN'));
+
+            $decryptedToken = explode('§', unserialize($decryptedToken));
+
+            if ($decryptedToken[0] !== $data['myuuid']) {
+
+                throw new TokenValidityException('{
+                    "form": "UUID non valido"
+                    }');
+            }
+
+            if ($decryptedToken[1] !== $data['user-agent']) {
+
+                throw new TokenValidityException('User agent non valido');
+            }
+
+            $dateNow = Date::now('Europe/Rome');
+
+            $date = Carbon::createFromFormat('U', $decryptedToken[2], 'Europe/Rome');
+
+            if ($dateNow->diffInMinutes($date, true) > 10 ) {
+
+                throw new TokenValidityException('Tempo tra i timestamp maggiore di 10 minuti');
+            }
 
             // Mail address to
             Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
@@ -57,8 +85,15 @@ class APIController extends Controller
 
         // Catching contact form errors
         } catch (DecryptException $e) {
-            
-        
+
+            Log::error("Errore generato nella decriptazione del token. Messaggio di errore: %s - traccia: %s" . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                "status" => "error",
+                "message" => "Problemi con la gestione dei dati. Se il problema persiste contattateci tramite i nostri canali social",
+            ]);
 
         } catch (ContactFormException $e) {
 
@@ -66,6 +101,13 @@ class APIController extends Controller
                 "status" => "error",
                 "message" => $e->getMessage()
             ], 200);
+
+        } catch (TokenValidityException $e) {
+
+            return response()->json([
+                "status" => "error",
+                "message" => $e->getMessage()
+            ]);
 
         } catch (Exception $e) {
 
@@ -89,6 +131,8 @@ class APIController extends Controller
             $validated = Validator::make($request->all(), [
                 'myuuid' => 'required|uuid'
             ]);
+
+            Log::error($request->all());
 
             if ($validated->fails()) {
 
