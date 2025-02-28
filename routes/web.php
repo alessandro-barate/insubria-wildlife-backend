@@ -16,9 +16,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Homepage route
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route to handle all english paths
+Route::get('/en/{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
+
+// Route just for the /en path
+Route::get('/en', function() {
+    return view('welcome');
+});
+
+// Route for all the other paths
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '.*');
 
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
 Route::get('success', [PaypalController::class, 'success'])->name('success');
