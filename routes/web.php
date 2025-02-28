@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PaypalController;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
