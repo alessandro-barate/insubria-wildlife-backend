@@ -168,4 +168,20 @@ class APIController extends Controller
             ], 422);
         }
     }
+
+
+
+    // To debug emails style
+    public function previewEmail()
+    {
+        $data = [
+            'NomeMittente' => 'Mario',
+            'CognomeMittente' => 'Rossi',
+            'EmailMittente' => 'fefwef@efewf.it',
+            'TestoMessaggioMittente' => 'Messaggio dal form di contatto del sito'
+        ];
+        
+        return view('mail.sendmail', $data);
+
+    }
 }
