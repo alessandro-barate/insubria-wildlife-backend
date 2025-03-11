@@ -11,10 +11,13 @@ E' stata mandata da {{ $NomeMittente }} {{ $CognomeMittente }} {{ $EmailMittente
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nuova comunicazione dal sito</title>
+    <!--[if !mso]><!-->
     <style>
         @font-face {
             font-family: "Montserrat";
-            src: url('http://127.0.0.1:8000/fonts/Montserrat-Regular.ttf') format('truetype');
+            src: url('http://127.0.0.1:8000/fonts/Montserrat-Regular.woff') format('woff'),     /* Cambiare localhost con il dominio */
+            url('http://127.0.0.1:8000/fonts/Montserrat-Regular.woff2') format('woff2'),       /* Cambiare localhost con il dominio */
+            url('http://127.0.0.1:8000/fonts/Montserrat-Regular.ttf') format('truetype');      /* Cambiare localhost con il dominio */
             font-weight: normal;
             font-style: normal;
         }
@@ -30,7 +33,7 @@ E' stata mandata da {{ $NomeMittente }} {{ $CognomeMittente }} {{ $EmailMittente
         }
 
         h1 {
-            font-size: 40px;
+            font-size: 35px;
             text-align: center; 
         }
 
@@ -80,4 +83,69 @@ E' stata mandata da {{ $NomeMittente }} {{ $CognomeMittente }} {{ $EmailMittente
         <p>{{ $TestoMessaggioMittente }}</p>
     </div>
 </body>
+
+{{-- <body style="margin: 0; padding: 0; width: 100%; font-family: Arial, Helvetica, sans-serif; line-height: 1.6;">
+    <!-- Container principale -->
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 1000px; margin: 0 auto; background-color: #000000;">
+        <tr>
+            <td style="padding: 20px; color: #fc8600;">
+                <!-- Titolo -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="text-align: center; padding-bottom: 20px;">
+                            <h1 style="font-size: 35px; font-family: Arial, Helvetica, sans-serif; margin: 0; color: #fc8600;">Nuova comunicazione dal form del sito</h1>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Informazioni mittente -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="text-align: center; padding: 0 5%;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr><td height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 1px;">&nbsp;</td></tr>
+                            </table>
+                            <p style="font-family: Arial, Helvetica, sans-serif; color: #fc8600;"><span style="font-weight: bold;">Nome:</span> {{ $NomeMittente }}</p>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr><td height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 1px;">&nbsp;</td></tr>
+                            </table>
+                            <p style="font-family: Arial, Helvetica, sans-serif; color: #fc8600;"><span style="font-weight: bold;">Cognome:</span> {{ $CognomeMittente }}</p>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr><td height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 1px;">&nbsp;</td></tr>
+                            </table>
+                            <p style="font-family: Arial, Helvetica, sans-serif; color: #fc8600;"><span style="font-weight: bold;">Email:</span> {{ $EmailMittente }}</p>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr><td height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 1px;">&nbsp;</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Contenitore messaggio -->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 30px; border: 1px solid #ffffff;">
+                    <tr>
+                        <td style="padding: 15px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="text-align: center; padding-bottom: 10px;">
+                                        <h2 style="font-family: Arial, Helvetica, sans-serif; margin: 0; color: #fc8600;">Messaggio:</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: Arial, Helvetica, sans-serif; color: #fc8600;">
+                                        <p>{{ $TestoMessaggioMittente }}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body> --}}
+
 </html>

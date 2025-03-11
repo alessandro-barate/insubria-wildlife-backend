@@ -76,7 +76,7 @@ class APIController extends Controller
             }
 
             // Mail address to
-            Mail::to(env('MAIL_DEFAULT_TO_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
+            Mail::to(env('MAIL_FROM_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
 
             return response()->json([
                 'status' => 'success',
@@ -171,7 +171,7 @@ class APIController extends Controller
 
 
 
-    // To debug emails style
+    // To modify the emails style
     public function previewEmail()
     {
         $data = [

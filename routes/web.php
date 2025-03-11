@@ -17,7 +17,7 @@ use App\Http\Controllers\APIController;
 |
 */
 
-// // Homepage route
+// Homepage route
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -37,7 +37,7 @@ use App\Http\Controllers\APIController;
 //     return view('welcome');
 // })->where('any', '.*');
 
-// Route to get a sent mail preview
+// Route to get a sent mail preview in browser
 Route::get('/mail-preview', [\App\Http\Controllers\APIController::class, 'previewEmail']);
 
 Route::post('paypal', [PaypalController::class, 'paypal'])->name('paypal');
