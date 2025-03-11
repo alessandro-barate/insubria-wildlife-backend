@@ -26,7 +26,7 @@ E' stata mandata da {{ $NomeMittente }} {{ $CognomeMittente }} {{ $EmailMittente
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.95);
+            background: linear-gradient(90deg, rgba(0,0,0,1) 60%, rgb(119, 71, 3) 100%);
         }
 
         h1 {

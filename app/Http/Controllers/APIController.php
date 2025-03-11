@@ -178,7 +178,7 @@ class APIController extends Controller
             'NomeMittente' => 'Mario',
             'CognomeMittente' => 'Rossi',
             'EmailMittente' => 'fefwef@efewf.it',
-            'TestoMessaggioMittente' => 'Messaggio dal form di contatto del sito'
+            'TestoMessaggioMittente' => 'Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito,Messaggio dal form di contatto del sito'
         ];
         
         return view('mail.sendmail', $data);
