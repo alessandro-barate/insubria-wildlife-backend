@@ -22,21 +22,6 @@ use App\Http\Controllers\APIController;
 //     return view('welcome');
 // });
 
-// // Route to handle all english paths
-// Route::get('/en/{any}', function () {
-//     return view('welcome');
-// })->where('any', '.*');
-
-// // Route just for the /en path
-// Route::get('/en', function() {
-//     return view('welcome');
-// });
-
-// // Route for all the other paths
-// Route::get('/{any}', function () {
-//     return view('welcome');
-// })->where('any', '.*');
-
 // Route to get a sent mail preview in browser
 Route::get('/mail-preview', [\App\Http\Controllers\APIController::class, 'previewEmail']);
 
