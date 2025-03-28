@@ -41,22 +41,22 @@
                     <tr>
                         <td>
                             <table>
-                                <tr><td width="700" height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
+                                <tr><td width="700" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
                             </table>
                             <p><span style="font-weight: bold;">Nome:</span> {{ $NomeMittente }}</p>
                             
                             <table>
-                                <tr><td width="700" height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
+                                <tr><td width="700" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
                             </table>
                             <p><span style="font-weight: bold;">Cognome:</span> {{ $CognomeMittente }}</p>
                             
                             <table>
-                                <tr><td width="700" height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
+                                <tr><td width="700" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
                             </table>
                             <p><span style="font-weight: bold;">Email:</span> {{ $EmailMittente }}</p>
                             
                             <table>
-                                <tr><td width="700" height="1" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
+                                <tr><td width="700" style="background-color: #ffffff; opacity: 0.6; font-size: 0.1px;">&nbsp;</td></tr>
                             </table>
                         </td>
                     </tr>
