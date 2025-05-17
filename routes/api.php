@@ -28,8 +28,3 @@ Route::get('/token', [APIController::class, 'getToken']);
 
 // API to get the events' details
 Route::get('/posters', [PosterController::class, 'index']);
-
-
-// Route::get('/test', function () {
-//     return response()->json(['status' => 'ok']);
-// });
