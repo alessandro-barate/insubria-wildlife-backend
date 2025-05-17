@@ -50,9 +50,31 @@ class APIController extends Controller
                 throw new ContactFormException($validated->errors());
             };
 
-            $decryptedToken = Crypt::decryptString($request->header('X-CSRF-TOKEN'));
+             # $decryptedToken = Crypt::decryptString($request->header('X-CSRF-TOKEN'));
 
-            $decryptedToken = explode('§', unserialize($decryptedToken));
+             try {
+                // Tentativo di decrittografia del token originale
+                $decryptedToken = Crypt::decryptString($request->header('X-CSRF-TOKEN'));
+                $decryptedToken = explode('§', unserialize($decryptedToken));
+            } catch (Exception $e) {
+                // Handle the new token format
+                try {
+                    $tokenData = json_decode(base64_decode($request->header('X-CSRF-TOKEN')), true);
+                    if (!$tokenData) {
+                        throw new Exception("Invalid token format");
+                    }
+                    $decryptedToken = [
+                        $tokenData['uuid'] ?? '',
+                        $tokenData['agent'] ?? '',
+                        $tokenData['time'] ?? 0
+                    ];
+                } catch (Exception $tokenErr) {
+                    Log::warning("Token decoding failed: " . $tokenErr->getMessage());
+                    throw new TokenValidityException('Token non valido');
+                }
+            }
+
+            // $decryptedToken = explode('§', unserialize($decryptedToken));
 
             if ($decryptedToken[0] !== $data['myuuid']) {
 
@@ -76,7 +98,9 @@ class APIController extends Controller
             }
 
             // Mail address to
-            Mail::to(env('MAIL_FROM_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
+            // Mail::to(env('MAIL_FROM_ADDRESS'))->send(new sendMail($data));       // Send email to the form user compiler for testing purposes: $request->input('mail')
+
+            Log::info("Form submission received - Email would have been sent to: " . env('MAIL_FROM_ADDRESS'), $data);
 
             return response()->json([
                 'status' => 'success',
@@ -132,7 +156,7 @@ class APIController extends Controller
                 'myuuid' => 'required|uuid'
             ]);
 
-            Log::error($request->all());
+            Log::error($request->all());            # possibile causa di errore
 
             if ($validated->fails()) {
 
@@ -164,7 +188,9 @@ class APIController extends Controller
 
             return response()->json([
                 "status" => "error",
-                "message" => "Si è verificato un errore. Se il problema persiste contattateci tramite i nostri canali social"
+                "message" => json_encode([
+                    "form" => "Si è verificato un errore. Se il problema persiste contattateci tramite i nostri canali social."
+                ])
             ], 422);
         }
     }

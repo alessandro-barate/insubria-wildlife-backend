@@ -31,7 +31,12 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
+// Delete this when backend is loaded on the host's server
 require __DIR__.'/../vendor/autoload.php';
+
+// Setting for the backend on the host's server
+// require __DIR__.'/vendor/autoload.php';
+// $app = require_once __DIR__.'/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
