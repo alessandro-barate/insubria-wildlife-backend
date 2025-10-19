@@ -62,7 +62,7 @@ if (!filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
 }
 
 // Prepare email content with proper formatting
-$to = "alebarat@gmail.com"; // Replace with your actual email address
+$to = "insubria.wildlife@gmail.com";
 $subject = "Informazioni da " . htmlspecialchars($data['name'] . ' ' . ($data['surname'] ?? '')) . " - Insubria Wildlife";
 
 // Create a formatted HTML message
@@ -111,6 +111,9 @@ $headers .= "Content-Type: multipart/alternative; boundary=\"{$boundary}\"\r\n";
 $headers .= "From: Insubria Wildlife <contatti@insubriawildlife.com>\r\n";
 $headers .= "Reply-To: " . $data['mail'] . "\r\n";
 $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
+$headers .= "Precedence: bulk\r\n";
+$headers .= "Message-ID: <" . time() . rand(1000, 9999) . "@insubriawildlife.com>\r\n";
+$headers .= "Date: " . date("r") . "\r\n";
 
 // Multipart message preparation
 $message = "--{$boundary}\r\n";
